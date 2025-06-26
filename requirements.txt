@@ -4,3 +4,7 @@ langchain-chroma
 pandas 
 fastapi
 uvicorn 
+streamlit
+langchain-community
+langchain-core 
+requests 
