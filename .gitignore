@@ -18,4 +18,4 @@ env/
 .vscode/
 *.log
 pip-log.txt
-*.sqlite3
+
