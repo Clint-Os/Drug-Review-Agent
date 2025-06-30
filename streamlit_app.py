@@ -1,17 +1,26 @@
 import streamlit as st
 import requests
+import os
+
+st.set_page_config(page_title="Drug Review Agent 💊")
 
 st.title("💊 Drug Review Agent")
+st.markdown("Search for a drug or condition to see relevant side effects and reviews.")
 
 query = st.text_input("Enter a drug or condition:")
 
+# Use HF-provided API URL or fallback to local
+API_URL = os.getenv("API_URL", "http://localhost:8000")
+
 if st.button("Search"):
-    if query:
+    if query.strip():
         try:
-            response = requests.post("http://localhost:8000/query", json={"query": query})
+            response = requests.post(f"{API_URL}/query", json={"query": query})
             if response.status_code == 200:
-                st.success(response.json().get("result", "No result found"))
+                result = response.json().get("result", "⚠️ No relevant results found.")
+                st.success(result)
             else:
                 st.error(f"Error {response.status_code}: {response.text}")
         except Exception as e:
             st.error(f"Request failed: {e}")
+
