@@ -18,23 +18,25 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Streamlit config fix for Hugging Face (create writable config path)
-RUN mkdir -p /app/.streamlit
-RUN echo "\
+RUN mkdir -p /app/.streamlit && \
+    echo "\
 [server]\n\
 headless = true\n\
 port = 8501\n\
 enableCORS = false\n\
-" > /app/.streamlit/config.toml 
+" > /app/.streamlit/config.toml
 
-# Set environment variable so Streamlit uses the correct config path
-ENV STREAMLIT_CONFIG_DIR=/app/.streamlit
+# Ensure Streamlit uses the writable config directory
+ENV STREAMLIT_HOME=/app/.streamlit
 
 # Expose Streamlit and FastAPI ports
 EXPOSE 8501
 EXPOSE 8000
 
-# Start both FastAPI and Streamlit (adjust as needed)
-CMD ["bash", "start.sh"]
+# Start both FastAPI and Streamlit
+CMD ["bash", "start.sh"] 
+
+
 
 
 
