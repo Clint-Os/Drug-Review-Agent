@@ -1,16 +1,25 @@
-# Use official Python base image
-FROM python:3.11-slim
+# Use a base image
+FROM python:3.9-slim
 
-WORKDIR /app
+# Install dependencies
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-
+# Copy app code
 COPY . .
 
-# Expose FastAPI's default port
-EXPOSE 8000
+COPY drug_reviews_db ./drug_reviews_db 
 
-# Start the FastAPI application using uvicorn
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# avoid file watching errors
+RUN mkdir -p ~/.streamlit && echo "\
+[server]\n\
+headless = true\n\
+runOnSave = false\n\
+fileWatcherType = \"none\"\n\
+" > ~/.streamlit/config.toml
+
+# Run FastAPI + Streamlit using start.sh
+CMD ["./start.sh"]
+
+

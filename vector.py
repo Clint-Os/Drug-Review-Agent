@@ -7,7 +7,8 @@ import pandas as pd
 
 df = pd.read_csv('drug_reviews.csv')
 df = df.dropna(subset=['DrugName', 'sideEffectsReview', 'condition', 'rating', 'effectiveness', 'sideEffects'])
-embeddings = OllamaEmbeddings(model="mxbai-embed-large") # Ensure the model name is correct and matches the Ollama model you have installed
+embeddings = OllamaEmbeddings(model="mxbai-embed-large",
+                              base_url = "http://host.docker.internal:11434") # Ensure the model name is correct and matches the Ollama model you have installed
 
 db_location = "./drug_reviews_db"
 add_documents = not os.path.exists(db_location)
