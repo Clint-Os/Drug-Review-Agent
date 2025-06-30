@@ -1,14 +1,20 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from healthcheck import router as health_router
+from fastapi.middleware.cors import CORSMiddleware
+
 from vector import retriever # Import the retriever from vector.py
 
 app = FastAPI()
+app.include_router(health_router, prefix="/health", tags=["Health Check"])
 
-# Dummy LLM class
-def dummy_response(query: str) -> str:
-    # Mock output simulating real LLM - to be replaced later
-    # with actual model logic
-    return f"(Mocked answer) You asked: '{query}'. This is a placeholder response until your model is reconnected."
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  
+    allow_credentials=True,
+    allow_methods=["*"],  
+    allow_headers=["*"],  
+)
 
 # Input model
 class QueryInput(BaseModel):
@@ -19,10 +25,15 @@ class QueryInput(BaseModel):
 async def query_endpoint(input: QueryInput):
     try:
         docs = retriever.invoke(input.query)
-        result = "\n".join([doc.page_content for doc in docs])
+        result = [
+            {
+                "content": doc.page_content,
+                "metadata": doc.metadata
+            } for doc in docs
+        ]
     except Exception as e:
         result = f"Error retrieving documents: {str(e)}"
 
-    return {"result": result} 
+    return {"results": result} 
 
 
