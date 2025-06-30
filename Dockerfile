@@ -27,13 +27,15 @@ enableCORS = false\n\
 " > /app/.streamlit/config.toml
 
 # Ensure Streamlit uses the writable config directory
-ENV STREAMLIT_HOME=/app/.streamlit
+ENV STREAMLIT_CONFIG_DIR=/app/.streamlit
+ENV XDG_CONFIG_HOME=/app
+
 
 # Expose Streamlit and FastAPI ports
 EXPOSE 8501
 EXPOSE 8000
 
-# Start both FastAPI and Streamlit
+# Start app 
 CMD ["bash", "start.sh"] 
 
 
