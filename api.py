@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from vector import retriever # Import the retriever from vector.py
 
 app = FastAPI()
 
@@ -13,10 +14,15 @@ def dummy_response(query: str) -> str:
 class QueryInput(BaseModel):
     query: str
 
-# FastAPI endpoint
+
 @app.post("/query")
 async def query_endpoint(input: QueryInput):
-    response = dummy_response(input.query)
-    return {"result": response}
+    try:
+        docs = retriever.invoke(input.query)
+        result = "\n".join([doc.page_content for doc in docs])
+    except Exception as e:
+        result = f"Error retrieving documents: {str(e)}"
+
+    return {"result": result} 
 
 
