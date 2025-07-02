@@ -18,7 +18,12 @@ fi
 echo "🚀 Step 4: Starting backend..."
 ./start.sh &
 
-sleep 5  # Wait for server to start
+echo "🕐 Waiting for backend to become available..."
+# Ping the server until it's up
+until curl -s http://localhost:8000/health > /dev/null; do
+  sleep 1
+done
+
 
 echo "🧪 Step 5: Testing FastAPI /query endpoint..."
 curl -X POST http://localhost:8000/query \
