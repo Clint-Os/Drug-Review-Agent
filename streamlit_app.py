@@ -10,12 +10,12 @@ st.markdown("Search for a drug or condition to see relevant side effects and rev
 query = st.text_input("Enter a drug or condition:")
 
 # Use HF-provided API URL or fallback to local
-API_URL = os.getenv("API_URL", "/query")
+API_URL = os.getenv("API_URL", "/")
 
 if st.button("Search"):
     if query.strip():
         try:
-            response = requests.post(API_URL, json={"query": query})
+            response = requests.post(f"{API_URL.rstrip('/')}/query", json={"query": query})
             if response.status_code == 200:
                 result = response.json().get("result", "No relevant results found.")
                 st.success(result)
