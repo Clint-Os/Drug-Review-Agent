@@ -10,7 +10,7 @@ st.markdown("Search for a drug or condition to see relevant side effects and rev
 query = st.text_input("Enter a drug or condition:")
 
 # Use HF-provided API URL or fallback to local
-API_URL = os.getenv("API_URL", "http://localhost:8000")
+API_URL = os.getenv("API_URL", "http://localhost:8000/query")
 
 if st.button("Search"):
     if query.strip():
